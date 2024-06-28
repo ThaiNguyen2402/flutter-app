@@ -1,3 +1,5 @@
+import 'package:app_bangiay_doan/page/trangchu/trangchubody.dart';
+import 'package:app_bangiay_doan/page/trangchu/trangchuwidget.dart';
 import 'package:flutter/material.dart';
 import '../page/homewidget.dart';
 import 'category/categorywidget.dart';
@@ -16,8 +18,10 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex  = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    HomeWidget(),
+    HomePage(),
     CategoryWidget(),
     ProductList(),
     ProductCart(),
@@ -35,11 +39,8 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return  MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Trang chủ'),
-        ),
         body: Center(
-          //child: _widgetOptions.elementAt(_selectedIndex),
+          child: _widgetOptions.elementAt(_selectedIndex),
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -48,12 +49,12 @@ class _MainPageState extends State<MainPage> {
               label: 'Trang chủ',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.category_outlined),
+              icon: Icon(Icons.bookmark_add_outlined),
               label: 'Đơn hàng',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
-              label: 'Favorite',
+              label: 'Yêu thích',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag),

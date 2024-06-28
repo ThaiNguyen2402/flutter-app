@@ -1,4 +1,6 @@
 import 'package:app_bangiay_doan/page/mainpage.dart';
+import 'package:app_bangiay_doan/page/trangchu/trangchubody.dart';
+import 'package:app_bangiay_doan/page/trangchu/trangchuwidget.dart';
 import 'package:flutter/material.dart';
 
 void main() {
