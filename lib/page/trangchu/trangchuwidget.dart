@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../data/model/categorymodel.dart';
 import '../../config/const.dart';
 import '../../provider/categoryprovider.dart';
 import '../product/productwidget.dart';
-
 class CategoryListView extends StatelessWidget {
   final List<Category> categories;
   final List<String> categoryNames;
@@ -47,8 +47,8 @@ Widget itemCateView(Category itemcate, String categoryName, BuildContext context
             borderRadius: BorderRadius.all(Radius.circular(15)), // Bo tròn góc của hình vuông
           ),
           child: Container(
-            width: 140, // Kích thước chiều rộng của hình vuông
-            height: 140, // Kích thước chiều cao của hình vuông
+            width: 150, // Kích thước chiều rộng của hình vuông
+            height: 150, // Kích thước chiều cao của hình vuông
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
@@ -65,7 +65,7 @@ Widget itemCateView(Category itemcate, String categoryName, BuildContext context
         Text(
           categoryName,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 17,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -80,11 +80,22 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+class Product {
+  final String imageUrl;
+  final String name;
+  final double price;
 
+  Product({
+    required this.imageUrl,
+    required this.name,
+    required this.price,
+  });
+}
 class _HomePageState extends State<HomePage> {
-  int _current = 0; // Biến để lưu trạng thái trang hiện tại của slider
+  int _current = 0;
   final CarouselController _controller = CarouselController();
   late Future<List<Category>> futureCategories;
+  final NumberFormat priceFormat = NumberFormat("#,###.###đ");
 
   final List<String> categoryNames = [
     'Air Force',
@@ -92,6 +103,17 @@ class _HomePageState extends State<HomePage> {
     'SB Dunk',
     'Air Jordan 1',
   ];
+
+  // Danh sách sản phẩm cần hiển thị
+  final List<Product> products = [
+    Product(imageUrl: 'assets/images/products/af1.png', name: 'Nike Air Force 1', price: 3000000),
+    Product(imageUrl: 'assets/images/products/am1.png', name: 'Nike Air Max 1', price: 5000000),
+    Product(imageUrl: 'assets/images/products/dunk1.png', name: 'Nike SB Dunk', price: 4000000),
+    Product(imageUrl: 'assets/images/products/jd1.png', name: 'Nike Air Jordan 1', price: 5500000),
+  ];
+
+  // Danh sách trạng thái yêu thích của sản phẩm (ban đầu tất cả là false)
+  List<bool> isFavorite = List.generate(4, (_) => false);
 
   @override
   void initState() {
@@ -114,12 +136,10 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Fein Store',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 40,
-          ),
+        title: Image.asset(
+          'assets/images/Logo1.png',
+          fit: BoxFit.contain,
+          height: 60,
         ),
         centerTitle: true,
         actions: [
@@ -127,7 +147,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(right: 16.0),
             child: Icon(
               Icons.search,
-              size: 32, // Tăng kích thước của icon tìm kiếm
+              size: 32,
             ),
           ),
         ],
@@ -144,11 +164,11 @@ class _HomePageState extends State<HomePage> {
                       width: MediaQuery.of(context).size.width,
                       margin: EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15), // Bo tròn góc của slider
+                        borderRadius: BorderRadius.circular(15),
                         color: Colors.amber,
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15), // Bo tròn góc của hình ảnh
+                        borderRadius: BorderRadius.circular(15),
                         child: Image.asset(
                           item,
                           fit: BoxFit.cover,
@@ -160,7 +180,7 @@ class _HomePageState extends State<HomePage> {
               }).toList(),
               carouselController: _controller,
               options: CarouselOptions(
-                height: 180, // Giảm chiều cao của slider
+                height: 180,
                 autoPlay: true,
                 enlargeCenterPage: true,
                 aspectRatio: 16 / 9,
@@ -187,8 +207,8 @@ class _HomePageState extends State<HomePage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black)
+                          ? Colors.white
+                          : Colors.black)
                           .withOpacity(_current == entry.key ? 0.9 : 0.4),
                     ),
                   ),
@@ -201,7 +221,7 @@ class _HomePageState extends State<HomePage> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Dành Cho Bạn',
+                  'Dành cho bạn',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -225,6 +245,148 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
               },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Sản phẩm nổi bật',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Thêm xử lý khi nhấn vào nút "Tất cả" ở đây
+                    },
+                    child: Text(
+                      'Tất cả',
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(0),
+              child: Container(
+                height: 300, // Độ cao của danh sách sản phẩm
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: products.length, // Số lượng sản phẩm cần hiển thị
+                  itemBuilder: (BuildContext context, int index) {
+                    // Lấy sản phẩm từ danh sách
+                    Product product = products[index];
+
+                    // Lấy trạng thái yêu thích của sản phẩm
+                    bool isFavorited = isFavorite[index];
+
+                    // Sử dụng switch case để xác định hình ảnh và tên sản phẩm dựa trên index
+                    String imageUrl = '';
+                    String productName = '';
+                    switch (index) {
+                      case 0:
+                        imageUrl = 'assets/images/products/af1.png';
+                        productName = 'Nike Air Force 1';
+                        break;
+                      case 1:
+                        imageUrl = 'assets/images/products/am1.png';
+                        productName = 'Nike Air Max 1';
+                        break;
+                      case 2:
+                        imageUrl = 'assets/images/products/dunk1.png';
+                        productName = 'Nike SB Dunk';
+                        break;
+                      case 3:
+                        imageUrl = 'assets/images/products/jd1.png';
+                        productName = 'Nike Air Jordan 1';
+                        break;
+                      default:
+                        imageUrl = '';
+                        productName = '';
+                        break;
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 150, // Độ rộng của hình ảnh sản phẩm
+                            height: 150, // Độ cao của hình ảnh sản phẩm
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: Colors.black, width: 1.5), // Đặt viền màu đen
+                            ),
+                            // Hiển thị hình ảnh sản phẩm
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.asset(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            productName, // Hiển thị tên của sản phẩm
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            priceFormat.format(product.price), // Hiển thị giá tiền của sản phẩm
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Xử lý khi nhấn vào nút "Mua ngay"
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black, // Màu nút là màu xanh
+                                ),
+                                child: Text(
+                                  'Mua ngay',
+                                  style: TextStyle(
+                                    color: Colors.white, // Màu chữ là màu trắng
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  // Đảo ngược trạng thái yêu thích của sản phẩm khi nhấn vào biểu tượng trái tim
+                                  setState(() {
+                                    isFavorite[index] = !isFavorite[index];
+                                  });
+                                },
+                                icon: Icon(
+                                  isFavorited ? Icons.favorite : Icons.favorite_border,
+                                  color: Colors.black, // Màu biểu tượng là màu đỏ
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),

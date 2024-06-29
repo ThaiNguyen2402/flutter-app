@@ -1,13 +1,10 @@
-import 'package:app_bangiay_doan/page/trangchu/trangchubody.dart';
+
+import 'package:app_bangiay_doan/page/Cart/cartwidget.dart';
 import 'package:app_bangiay_doan/page/trangchu/trangchuwidget.dart';
 import 'package:flutter/material.dart';
-import '../page/homewidget.dart';
-import 'category/categorywidget.dart';
 import 'history/historywidget.dart';
-import 'favorite/favoritewidget.dart';
-import '../page/product/productcart.dart';
-import '../page/product/productlist.dart';
 import 'profile/profilewidget.dart';
+import 'favorite/favoritewidget.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -22,12 +19,11 @@ class _MainPageState extends State<MainPage> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    CategoryWidget(),
-    ProductList(),
-    ProductCart(),
-    FavoriteWidget(),
     HistoryWidget(),
-    ProfileWidget(),
+    FavoriteWidget(),
+    CartWidget(),
+    ProfileWidget()
+
   ];
    
    void _onItemTapped(int index){
@@ -53,11 +49,11 @@ class _MainPageState extends State<MainPage> {
               label: 'Đơn hàng',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
+              icon: Icon(Icons.favorite_border),
               label: 'Yêu thích',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag),
+              icon: Icon(Icons.shopping_bag_outlined),
               label: 'Giỏ hàng',
             ),
             BottomNavigationBarItem(
