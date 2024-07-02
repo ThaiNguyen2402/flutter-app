@@ -3,18 +3,20 @@ import 'package:app_bangiay_doan/page/trangchu/trangchubody.dart';
 import 'package:app_bangiay_doan/page/trangchu/trangchuwidget.dart';
 import 'package:flutter/material.dart';
 
+import 'package:app_bangiay_doan/page/splash/splashscreen.dart';
+
 void main() {
   runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  const MainApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: const Splashscreen(),  
     );
   }
 }
