@@ -32,21 +32,21 @@ class HorizontalScroll extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.asset(
-                    'assets/images/cate2.png',
+                    'assets/images/cate1.png',
                     fit: BoxFit.cover,
                   ),
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.asset(
-                    'assets/images/cate3.png',
+                    'assets/images/cate1.png',
                     fit: BoxFit.cover,
                   ),
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.asset(
-                    'assets/images/cate4.png',
+                    'assets/images/cate1.png',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -67,13 +67,12 @@ class HorizontalScroll extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Implement sign-up functionality here
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16), // Độ lớn của nút
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16), 
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0), // Độ cong của góc nút
+                      borderRadius: BorderRadius.circular(8.0), 
                     ),
                   ),
                   child: Text('Đăng ký', style: TextStyle(color: Colors.black),),
@@ -84,7 +83,7 @@ class HorizontalScroll extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black, // Màu chữ của dòng text 'hoặc'
+                    color: Colors.black, 
                   ),
                 ),
                 SizedBox(width: 10),
@@ -92,10 +91,10 @@ class HorizontalScroll extends StatelessWidget {
                   onPressed: () {
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black, // Màu nền của nút
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16), // Độ lớn của nút
+                    backgroundColor: Colors.black, 
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16), 
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0), // Độ cong của góc nút
+                      borderRadius: BorderRadius.circular(8.0), 
                     ),
                   ),
                   child: Text('Đăng nhập', style: TextStyle(color: Colors.white),),
