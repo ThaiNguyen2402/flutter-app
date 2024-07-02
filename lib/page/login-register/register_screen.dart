@@ -22,13 +22,10 @@ class RegisterScreen extends StatelessWidget {
                   Spacer(),
                 ],
               ),
-              Text(
-                'Fein Store',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+              Image.asset(
+                'assets/images/Logo1.png',
+                height: 150,
+                width: 150,
               ),
               SizedBox(height: 40),
               Text(

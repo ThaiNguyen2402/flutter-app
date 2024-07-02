@@ -12,9 +12,9 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/Logo1.png',
-                height: 100,
-                width: 100,
+                'assets/images/Logo1.png',
+                height: 150,
+                width: 150,
               ),
               SizedBox(height: 40),
               Text(
