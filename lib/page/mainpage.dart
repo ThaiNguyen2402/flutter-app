@@ -1,4 +1,3 @@
-
 import 'package:app_bangiay_doan/page/Cart/cartwidget.dart';
 import 'package:app_bangiay_doan/page/trangchu/trangchuwidget.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex  = 0;
+  int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -23,17 +22,17 @@ class _MainPageState extends State<MainPage> {
     FavoriteWidget(),
     CartWidget(),
     ProfileWidget()
-
   ];
-   
-   void _onItemTapped(int index){
+
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-   }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
