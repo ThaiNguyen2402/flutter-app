@@ -1,6 +1,8 @@
 import 'package:app_bangiay_doan/page/mainpage.dart';
 import 'package:app_bangiay_doan/page/trangchu/trangchubody.dart';
 import 'package:app_bangiay_doan/page/trangchu/trangchuwidget.dart';
+import 'package:app_bangiay_doan/page/login-register/login_screen.dart';
+import 'package:app_bangiay_doan/page/login-register/register_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,9 +14,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
+      },
     );
   }
 }
