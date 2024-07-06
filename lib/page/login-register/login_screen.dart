@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app_bangiay_doan/page/mainpage.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -56,7 +57,15 @@ class LoginScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Thực hiện các thao tác kiểm tra đăng nhập ở đây
+
+                  // Chuyển sang trang MainPage sau khi đăng nhập thành công
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainPage()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
