@@ -1,3 +1,5 @@
+import 'package:app_bangiay_doan/page/login-register/login_screen.dart';
+import 'package:app_bangiay_doan/page/login-register/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -24,33 +26,41 @@ class HorizontalScroll extends StatelessWidget {
                 ),
                 items: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(20.0),
                     child: Image.asset(
-                      'assets/images/cate1.png',
+                      'assets/images/s1.png',
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
                   ),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(20.0),
                     child: Image.asset(
-                      'assets/images/cate2.png',
+                      'assets/images/s2.png',
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
                   ),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(20.0),
                     child: Image.asset(
-                      'assets/images/cate1.png',
+                      'assets/images/s3.png',
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
                   ),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(20.0),
                     child: Image.asset(
-                      'assets/images/cate4.png',
+                      'assets/images/s4.png',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: Image.asset(
+                      'assets/images/s5.png',
                       fit: BoxFit.cover,
                       width: double.infinity,
                     ),
@@ -59,37 +69,42 @@ class HorizontalScroll extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 5.0),
           Padding(
             padding: EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset('assets/images/Logo1.png', height: 50, width: 150),
-                SizedBox(height: 5.0),
+                Image.asset('assets/images/Logo1.png', height: 60, width: 180),
                 Text(
                   'Mang đến cho thành viên của Fein những sản phẩm, nguồn cảm hứng và câu chuyện hay nhất trong thể thao.',
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                SizedBox(height: 12.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterScreen(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
                         ),
+                        child: Text('Đăng ký', style: TextStyle(color: Colors.black)),
                       ),
-                      child: Text('Đăng ký',
-                          style: TextStyle(color: Colors.black)),
                     ),
                     SizedBox(width: 10),
                     Text(
@@ -100,18 +115,25 @@ class HorizontalScroll extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginScreen(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
                         ),
+                        child: Text('Đăng nhập', style: TextStyle(color: Colors.white)),
                       ),
-                      child: Text('Đăng nhập',
-                          style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),
