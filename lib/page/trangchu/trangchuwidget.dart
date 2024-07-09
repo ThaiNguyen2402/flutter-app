@@ -1,3 +1,4 @@
+import 'package:app_bangiay_doan/page/details/productdetail%20.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -341,103 +342,107 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: Container(
-                    height: 300, // Độ cao của danh sách sản phẩm
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: filteredProducts
-                          .length, // Số lượng sản phẩm cần hiển thị
-                      itemBuilder: (BuildContext context, int index) {
-                        // Lấy sản phẩm từ danh sách
-                        Product product = filteredProducts[index];
+Padding(
+  padding: const EdgeInsets.all(0),
+  child: Container(
+    height: 300, // Độ cao của danh sách sản phẩm
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: filteredProducts.length, // Số lượng sản phẩm cần hiển thị
+      itemBuilder: (BuildContext context, int index) {
+        // Lấy sản phẩm từ danh sách
+        Product product = filteredProducts[index];
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 150, // Độ rộng của hình ảnh sản phẩm
-                                height: 150, // Độ cao của hình ảnh sản phẩm
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  border: Border.all(
-                                      color: Colors.black,
-                                      width: 1.5), // Đặt viền màu đen
-                                ),
-                                // Hiển thị hình ảnh sản phẩm
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image.asset(
-                                    product.imageUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                product.name, // Hiển thị tên của sản phẩm
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                priceFormat.format(product
-                                    .price), // Hiển thị giá tiền của sản phẩm
-                                style: TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Xử lý khi nhấn vào nút "Mua ngay"
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Colors.black, // Màu nút là màu xanh
-                                    ),
-                                    child: Text(
-                                      'Mua ngay',
-                                      style: TextStyle(
-                                        color: Colors
-                                            .white, // Màu chữ là màu trắng
-                                      ),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      // Đảo ngược trạng thái yêu thích của sản phẩm khi nhấn vào biểu tượng trái tim
-                                      setState(() {
-                                        product.isFavorite =
-                                            !product.isFavorite;
-                                      });
-                                    },
-                                    icon: Icon(
-                                      product.isFavorite
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: Colors
-                                          .black, // Màu biểu tượng là màu đỏ
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailScreen(product:product),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 150, // Độ rộng của hình ảnh sản phẩm
+                  height: 150, // Độ cao của hình ảnh sản phẩm
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                        color: Colors.black,
+                        width: 1.5), // Đặt viền màu đen
+                  ),
+                  // Hiển thị hình ảnh sản phẩm
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.asset(
+                      product.imageUrl,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                product.name, // Hiển thị tên của sản phẩm
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                priceFormat.format(product.price), // Hiển thị giá tiền của sản phẩm
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Xử lý khi nhấn vào nút "Mua ngay"
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black, // Màu nút là màu xanh
+                    ),
+                    child: Text(
+                      'Mua ngay',
+                      style: TextStyle(
+                        color: Colors.white, // Màu chữ là màu trắng
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // Đảo ngược trạng thái yêu thích của sản phẩm khi nhấn vào biểu tượng trái tim
+                      setState(() {
+                        product.isFavorite = !product.isFavorite;
+                      });
+                    },
+                    icon: Icon(
+                      product.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: Colors.black, // Màu biểu tượng là màu đỏ
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  ),
+)
+
               ],
             ),
           ),
