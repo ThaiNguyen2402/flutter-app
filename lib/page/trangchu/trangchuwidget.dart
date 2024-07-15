@@ -1,4 +1,4 @@
-import 'package:app_bangiay_doan/page/details/productdetail%20.dart';
+import 'package:app_bangiay_doan/page/product/productdetail.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
