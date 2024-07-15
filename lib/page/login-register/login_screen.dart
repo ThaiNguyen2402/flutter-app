@@ -14,10 +14,10 @@ class LoginScreen extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/images/Logo1.png',
-                height: 150,
-                width: 150,
+                height: 200,
+                width: 200,
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 20),
               Text(
                 'Xin Chào !',
                 style: TextStyle(

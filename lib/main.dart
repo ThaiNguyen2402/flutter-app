@@ -18,13 +18,13 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Splashscreen(),
+      home: Splashscreen(),
       routes: {
         '/register': (context) => RegisterScreen(),
         '/login': (context) => LoginScreen(),
         '/horizontalScroll': (context) =>
-            HorizontalScroll(), // Thêm route cho HorizontalScroll
-        '/main': (context) => MainPage(), // Thêm route cho MainPage nếu cần
+            HorizontalScroll(), 
+        '/main': (context) => MainPage(),
       },
     );
   }
