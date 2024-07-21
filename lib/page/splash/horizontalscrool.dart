@@ -78,7 +78,7 @@ class HorizontalScroll extends StatelessWidget {
                 Text(
                   'Mang đến cho thành viên của Fein những sản phẩm, nguồn cảm hứng và câu chuyện hay nhất trong thể thao.',
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

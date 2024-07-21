@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'package:app_bangiay_doan/data/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'profileedit.dart';
+import 'settings.dart'; // Import the settings page
 
 class ProfileWidget extends StatefulWidget {
   const ProfileWidget({super.key});
@@ -9,110 +13,167 @@ class ProfileWidget extends StatefulWidget {
 }
 
 class _ProfileWidgetState extends State<ProfileWidget> {
+  User user = User.userEmpty();
+
+  @override
+  void initState() {
+    super.initState();
+    getDataUser();
+  }
+
+  getDataUser() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? strUser = pref.getString('user');
+
+    if (strUser != null) {
+      user = User.fromJson(jsonDecode(strUser));
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // create style
+    TextStyle labelStyle = const TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    );
+
+    TextStyle valueStyle = const TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.normal,
+      color: Colors.black,
+    );
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Thông tin cá nhân',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-        ),
+        title: const Text('Thông tin cá nhân'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          // Thêm SingleChildScrollView ở đây
           child: Padding(
-            padding: const EdgeInsets.all(50.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.grey[300],
-                        child: Icon(
-                          Icons.camera_alt,
-                          size: 50,
-                          color: Colors.black,
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100.0),
+                    child: user.imageURL != null && user.imageURL!.isNotEmpty
+                        ? Image.network(
+                            user.imageURL!,
+                            height: 200,
+                            width: 200,
+                            fit: BoxFit.cover,
+                          )
+                        : const Icon(
+                            Icons.person,
+                            size: 200,
+                            color: Colors.grey,
+                          ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      text: "Họ và tên: ",
+                      style: labelStyle,
+                      children: [
+                        TextSpan(
+                          text: user.fullName,
+                          style: valueStyle,
                         ),
-                      ),
-                      SizedBox(height: 50),
-                      OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => UpdateProfileScreen(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          'Chỉnh Sửa',
-                          style: TextStyle(color: Colors.blue),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Text.rich(
+                    TextSpan(
+                      text: "Địa chỉ: ",
+                      style: labelStyle,
+                      children: [
+                        TextSpan(
+                          text: user.schoolKey,
+                          style: valueStyle,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 50),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: Column(
-                    children: [
-                      buildInfoRow(
-                        'Họ và Tên:',
-                        'Nguyễn Trần Quang Thái',
-                      ),
-                      buildInfoRow('Email:', 'email@gmail.com'),
-                      buildInfoRow('Địa chỉ:', '600 Sư Vạn Hạnh, P1, Q10'),
-                      buildInfoRow('Số điện thoại:', '0903933765'),
-                      buildInfoRow('Ngày sinh:', '21/01/2000'),
-                    ],
+                  const SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      text: "Email: ",
+                      style: labelStyle,
+                      children: [
+                        TextSpan(
+                          text: user.schoolYear,
+                          style: valueStyle,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 50),
-                OutlinedButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Đăng xuất',
-                    style: TextStyle(color: Colors.red),
+                  const SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      text: "Ngày sinh: ",
+                      style: labelStyle,
+                      children: [
+                        TextSpan(
+                          text: user.birthDay,
+                          style: valueStyle,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                    height:
-                        50), // Khoảng cách cuối cùng để tránh bị chạm phần nút 'Đăng xuất'
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildInfoRow(String title, String content) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0,
-            ),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              content,
-              style: TextStyle(
-                fontSize: 18.0,
+                  const SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      text: "Số điện thoại: ",
+                      style: labelStyle,
+                      children: [
+                        TextSpan(
+                          text: user.phoneNumber,
+                          style: valueStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  const SizedBox(height: 40),
+                  OutlinedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UpdateProfileScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Chỉnh Sửa',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                ],
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

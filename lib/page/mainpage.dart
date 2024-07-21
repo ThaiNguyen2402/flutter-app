@@ -1,9 +1,9 @@
-import 'package:app_bangiay_doan/page/Cart/cartwidget.dart';
-import 'package:app_bangiay_doan/page/trangchu/trangchuwidget.dart';
+import 'package:app_bangiay_doan/page/Cart/cart_screen.dart';
+import 'package:app_bangiay_doan/page/history/history_screen.dart';
 import 'package:flutter/material.dart';
-import 'history/historywidget.dart';
-import 'profile/profilewidget.dart';
-import 'favorite/favoritewidget.dart';
+import 'package:app_bangiay_doan/page/trangchu/trangchuwidget.dart';
+import 'package:app_bangiay_doan/page/profile/profilewidget.dart';
+import 'package:app_bangiay_doan/page/favorite/favoritewidget.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -17,10 +17,10 @@ class _MainPageState extends State<MainPage> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    HistoryWidget(),
-    FavoriteWidget(),
-    CartWidget(),
+    HomeBuilder(),
+    HistoryScreen(),
+    FavoritePage(),
+    CartScreen(),
     ProfileWidget()
   ];
 
@@ -34,6 +34,21 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white, // Set the background color of the AppBar
+          elevation: 0, // Remove the shadow
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'assets/images/Logo1.png',
+                fit: BoxFit.contain,
+                height: 50, // Adjust the height as needed
+              ),
+            ],
+          ),
+        ),
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),

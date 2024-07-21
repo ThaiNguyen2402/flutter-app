@@ -1,157 +1,214 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app_bangiay_doan/data/data/api.dart';
+import 'package:app_bangiay_doan/data/data/sqlite.dart';
+import 'package:app_bangiay_doan/data/models/cart.dart';
+import 'package:app_bangiay_doan/data/models/product.dart';
 
-// Tạo class Product mới trong FavoriteWidget
-class FavoriteProduct {
-  final String imageUrl;
-  final String name;
-  final double price;
-
-  FavoriteProduct({
-    required this.imageUrl,
-    required this.name,
-    required this.price,
-  });
+// Create the formatCurrency function
+String formatCurrency(double amount) {
+  final NumberFormat formatter = NumberFormat('#,###.###', 'vi_VN');
+  return '${formatter.format(amount)} đ';
 }
 
-class FavoriteWidget extends StatefulWidget {
-  const FavoriteWidget({super.key});
+class FavoritePage extends StatefulWidget {
+  const FavoritePage({Key? key}) : super(key: key);
 
   @override
-  State<FavoriteWidget> createState() => _FavoriteWidgetState();
+  State<FavoritePage> createState() => _FavoritePageState();
 }
 
-class _FavoriteWidgetState extends State<FavoriteWidget> {
-  final NumberFormat priceFormat = NumberFormat("#,###.###đ");
+class _FavoritePageState extends State<FavoritePage> {
+  final DatabaseHelper _databaseService = DatabaseHelper();
+  late Set<int> favoriteProductIds;
+  late Future<List<ProductModel>> _productsFuture;
+  bool _showProduct = true;
 
-  // Danh sách sản phẩm yêu thích cứng
-  final List<FavoriteProduct> favoriteProducts = List.generate(4, (index) {
-    switch (index) {
-      case 0:
-        return FavoriteProduct(imageUrl: 'assets/images/products/af1.png', name: 'Nike Air Force 1', price: 3000000);
-      case 1:
-        return FavoriteProduct(imageUrl: 'assets/images/products/am1.png', name: 'Nike Air Max 1', price: 5000000);
-      case 2:
-        return FavoriteProduct(imageUrl: 'assets/images/products/dunk1.png', name: 'Nike SB Dunk', price: 4000000);
-      case 3:
-        return FavoriteProduct(imageUrl: 'assets/images/products/jd1.png', name: 'Nike Air Jordan 1', price: 5500000);
-      default:
-        return FavoriteProduct(imageUrl: '', name: '', price: 0);
-    }
-  });
+  @override
+  void initState() {
+    super.initState();
+    favoriteProductIds = Set<int>();
+    _productsFuture = _getProducts();
+  }
 
-  // Danh sách trạng thái yêu thích của sản phẩm (ban đầu tất cả là false)
-  List<bool> isFavorite = List.generate(4, (_) => false);
+  Future<List<ProductModel>> _getProducts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await APIRepository().getProduct(
+        prefs.getString('accountID').toString(),
+        prefs.getString('token').toString());
+  }
+
+  Future<void> _onSave(ProductModel pro) async {
+    _databaseService.insertProduct(Cart(
+        productID: pro.id,
+        name: pro.name,
+        des: pro.description,
+        price: pro.price,
+        img: pro.imageUrl,
+        count: 1));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Đã thêm sản phẩm vào giỏ hàng'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+    setState(() {});
+  }
+
+  void _toggleFavorite(int productId) {
+    setState(() {
+      _showProduct = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Sản phẩm đã xóa khỏi yêu thích'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  void _reloadPage() {
+    setState(() {
+      _showProduct = true;
+      _productsFuture = _getProducts();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Image.asset(
-          'assets/images/Logo1.png',
-          fit: BoxFit.contain,
-          height: 60,
-        ),
-        centerTitle: true, // Centers the title
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Sản phẩm yêu thích',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
-                  childAspectRatio: 0.75,
+    return FutureBuilder<List<ProductModel>>(
+      future: _productsFuture,
+      builder: (context, productSnapshot) {
+        if (productSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (productSnapshot.data!.isEmpty || !_showProduct) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text("Sản phẩm yêu thích"),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: _reloadPage,
                 ),
-                itemCount: favoriteProducts.length,
-                itemBuilder: (context, index) {
-                  final product = favoriteProducts[index];
-                  bool isFavorited = isFavorite[index];
-                  return Column(
-                    children: [
-                      Container(
-                        width: 150,
-                        height: 150,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.black, width: 1.5), // Đặt viền màu đen
+              ],
+            ),
+            body: Center(
+              child: Text("Không có sản phẩm yêu thích nào."),
+            ),
+          );
+        }
+
+        List<ProductModel> products = productSnapshot.data!;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Sản phẩm yêu thích"),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: _reloadPage,
+              ),
+            ],
+          ),
+          body: _showProduct
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8.0,
+                      mainAxisSpacing: 8.0,
+                      childAspectRatio: 0.75,
+                    ),
+                    itemCount: 1, // Chỉ hiển thị một sản phẩm
+                    itemBuilder: (context, index) {
+                      ProductModel product = products[0]; // Chỉ lấy sản phẩm đầu tiên
+                      return Card(
+                        elevation: 5.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          side: const BorderSide(color: Colors.black, width: 1.0), // Stroke border
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image.asset(
-                            product.imageUrl,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        product.name,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        priceFormat.format(product.price),
-                        style: const TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center, // Đưa các thành phần về giữa
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              // Xử lý khi nhấn vào nút "Mua ngay"
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black, // Màu nút là màu đen
-                            ),
-                            child: Text(
-                              'Mua ngay',
-                              style: TextStyle(
-                                color: Colors.white, // Màu chữ là màu trắng
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(8.0)),
+                                child: Image.network(
+                                  product.imageUrl,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 8), // Khoảng cách giữa nút và biểu tượng
-                          IconButton(
-                            onPressed: () {
-                              // Đảo ngược trạng thái yêu thích của sản phẩm khi nhấn vào biểu tượng trái tim
-                              setState(() {
-                                isFavorite[index] = !isFavorite[index];
-                              });
-                            },
-                            icon: Icon(
-                              isFavorited ? Icons.favorite_border : Icons.favorite,
-                              color: Colors.black, 
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product.name,
+                                    style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4.0),
+                                  Text(
+                                    NumberFormat('#,###.###đ').format(product.price),
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () {
+                                      _toggleFavorite(product.id);
+                                    },
+                                  ),
+                                  const Spacer(),
+                                  ElevatedButton(
+                                    onPressed: () => _onSave(product),
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white, backgroundColor: Colors.black,
+                                      minimumSize: const Size(100, 40),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20.0),
+                                      ),
+                                    ),
+                                    child: const Text('Mua ngay'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                )
+              : Center(
+                  child: Text("Không có sản phẩm yêu thích nào."),
+                ),
+        );
+      },
     );
   }
 }
