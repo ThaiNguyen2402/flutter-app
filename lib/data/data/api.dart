@@ -97,7 +97,7 @@ class APIRepository {
       String accountID, String token) async {
     try {
       Response res = await api.sendRequest.get(
-          '/Category/getList?accountID=$accountID',
+          '/Category/getList?accountID=thai4',
           options: Options(headers: header(token)));
       return res.data
           .map((e) => CategoryModel.fromJson(e))
@@ -177,7 +177,7 @@ class APIRepository {
   Future<List<ProductModel>> getProduct(String accountID, String token) async {
     try {
       Response res = await api.sendRequest.get(
-          '/Product/getList?accountID=$accountID',
+          '/Product/getList?accountID=thai4',
           options: Options(headers: header(token)));
       return res.data
           .map((e) => ProductModel.fromJson(e))

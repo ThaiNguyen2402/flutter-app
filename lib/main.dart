@@ -29,7 +29,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Splashscreen(),
       routes: {
-        '/register': (context) => RegisterScreen(),
+        '/register': (context) => Register(),
         '/login': (context) => LoginScreen(),
         '/horizontalScroll': (context) =>
             HorizontalScroll(), 

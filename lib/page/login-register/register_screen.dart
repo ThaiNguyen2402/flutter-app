@@ -1,296 +1,303 @@
 import 'package:flutter/material.dart';
+import 'package:app_bangiay_doan/data/data/api.dart';
+import 'package:app_bangiay_doan/data/models/register.dart';
+import 'package:app_bangiay_doan/page/login-register/login_screen.dart';
 
-class RegisterScreen extends StatefulWidget {
+class Register extends StatefulWidget {
+  const Register({super.key});
+
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController dobController = TextEditingController();
+class _RegisterState extends State<Register> {
+  int _gender = 0;
+  final TextEditingController _accountController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _numberIDController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _schoolKeyController = TextEditingController();
+  final TextEditingController _schoolYearController = TextEditingController();
+  final TextEditingController _birthDayController = TextEditingController();
+  String gendername = 'None';
+  String temp = '';
+  final _formKey = GlobalKey<FormState>();
 
-  register() {
-    // Regular expressions for validation
-    final emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@gmail\.com$');
-    final phoneRegExp = RegExp(r'^\d{10,11}$');
-    final dobRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-    final passwordRegExp = RegExp(r'^(?=.*?[A-Z])(?=.*?[!@#\$%^&*]).{6,}$');
+  // State variables for password visibility
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
-    // Email validation
-    if (!emailRegExp.hasMatch(emailController.text)) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Thông báo'),
-          content: Text('Email bắt buộc phải là @gmail.com'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } 
-    // Phone number validation
-    else if (!phoneRegExp.hasMatch(phoneController.text)) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Thông báo'),
-          content: Text('Số điện thoại phải từ 10 - 11 số'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } 
-    // Date of birth validation
-    else if (!dobRegExp.hasMatch(dobController.text)) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Thông báo'),
-          content: Text('Ngày sinh có định dạng dd/mm/yyyy'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } 
-    // Password validation
-    else if (!passwordRegExp.hasMatch(passwordController.text)) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Thông báo'),
-          content: Text(
-            'Mật khẩu phải bắt đầu bằng chữ in hoa và chứa ít nhất 1 ký tự đặc biệt.\nVí dụ: Password@1',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } 
-    // Check for empty fields and password match
-    else if (nameController.text.isEmpty ||
-             usernameController.text.isEmpty ||
-             addressController.text.isEmpty ||
-             phoneController.text.isEmpty ||
-             passwordController.text.isEmpty ||
-             confirmPasswordController.text.isEmpty ||
-             emailController.text.isEmpty ||
-             dobController.text.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Thông báo'),
-          content: Text('Vui lòng nhập đầy đủ thông tin'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } else if (passwordController.text != confirmPasswordController.text) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Thông báo'),
-          content: Text('Mật khẩu không khớp'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } else {
-      // Registration logic here
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Thông báo'),
-          content: Text('Đăng ký thành công'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/login');
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+  Future<String> register() async {
+    if (!_formKey.currentState!.validate()) {
+      return 'Vui lòng điền đủ thông tin';
     }
+
+    if (_gender == 0) {
+      return 'Vui lòng chọn giới tính';
+    }
+
+    return await APIRepository().register(Signup(
+        accountID: _accountController.text,
+        birthDay: _birthDayController.text,
+        password: _passwordController.text,
+        confirmPassword: _confirmPasswordController.text,
+        fullName: _fullNameController.text,
+        phoneNumber: _phoneNumberController.text,
+        schoolKey: _schoolKeyController.text,
+        schoolYear: _schoolYearController.text,
+        gender: getGender(),
+        imageUrl: '',
+        numberID: _numberIDController.text));
+  }
+
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email không được để trống';
+    }
+    final emailRegEx = RegExp(r'^[^@]+@gmail\.com$');
+    if (!emailRegEx.hasMatch(value)) {
+      return 'Email phải có dạng @gmail.com';
+    }
+    return null;
+  }
+
+  String? validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Số điện thoại không được để trống';
+    }
+    if (value.length < 10 || value.length > 11) {
+      return 'Số điện thoại phải có từ 10 - 11 số';
+    }
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Mật khẩu không được để trống';
+    }
+    final passwordRegEx = RegExp(r'^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+    if (!passwordRegEx.hasMatch(value)) {
+      return 'Mật khẩu phải có 1 chữ in hoa đầu và 1 ký tự đặc biệt (Ví dụ: Example@1)';
+    }
+    return null;
+  }
+
+  String? validateZipCode(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Mã zip không được để trống';
+    }
+    if (value != '700000') {
+      return 'Mã zip phải là 700000 (Ví dụ: 700000)';
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
+      appBar: AppBar(
+        title: const Text("Đăng nhập", style: TextStyle(fontSize: 16)),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                  Image.asset(
+                    'assets/images/Logo1.png',
+                    height: 80,
                   ),
-                  Spacer(),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "Vui lòng đăng ký tài khoản !",
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  signUpWidget(),
+                  const SizedBox(height: 16),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            String response = await register();
+                            if (response == "ok") {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginScreen()));
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text('Lỗi'),
+                                  content: Text(response),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.black,
+                            minimumSize: Size(100, 40),
+                          ),
+                          child: const Text('Đăng ký'),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                    ],
+                  )
                 ],
               ),
-              Image.asset(
-                'assets/images/Logo1.png',
-                height: 200,
-                width: 200,
-              ),
-              SizedBox(height: 40),
-              Text(
-                'Đăng Ký Tài Khoản !',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: 30),
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Họ và tên',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 5),
-              requiredField(),
-              SizedBox(height: 15),
-              TextField(
-                controller: usernameController,
-                decoration: InputDecoration(
-                  labelText: 'Tên tài khoản',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 5),
-              requiredField(),
-              SizedBox(height: 15),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 5),
-              requiredField(),
-              SizedBox(height: 15),
-              TextField(
-                controller: addressController,
-                decoration: InputDecoration(
-                  labelText: 'Địa chỉ',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 5),
-              requiredField(),
-              SizedBox(height: 15),
-              TextField(
-                controller: phoneController,
-                decoration: InputDecoration(
-                  labelText: 'Số điện thoại',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 5),
-              requiredField(),
-              SizedBox(height: 15),
-              TextField(
-                controller: dobController,
-                decoration: InputDecoration(
-                  labelText: 'Ngày sinh',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 5),
-              requiredField(),
-              SizedBox(height: 15),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Mật khẩu',
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.visibility_off),
-                ),
-              ),
-              SizedBox(height: 5),
-              requiredField(),
-              SizedBox(height: 15),
-              TextField(
-                controller: confirmPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Nhập lại mật khẩu',
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.visibility_off),
-                ),
-              ),
-              SizedBox(height: 5),
-              requiredField(),
-              SizedBox(height: 15),
-              ElevatedButton(
-                onPressed: register,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  textStyle: TextStyle(fontSize: 16),
-                ),
-                child: Text(
-                  'Đăng Ký',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget requiredField() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        '* Bắt buộc',
-        style: TextStyle(color: Colors.red, fontSize: 12),
+  String getGender() {
+    if (_gender == 1) {
+      return "Nam";
+    } else if (_gender == 2) {
+      return "Nữ";
+    }
+    return "Khác";
+  }
+
+  Widget textField(TextEditingController controller, String label, {bool obscureText = false, String? Function(String?)? validator, Widget? suffixIcon}) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          suffixIcon: suffixIcon,
+        ),
+        validator: validator,
       ),
+    );
+  }
+
+  Widget signUpWidget() {
+    return Column(
+      children: [
+        textField(_accountController, "Tên tài khoản", validator: (value) => value!.isEmpty ? 'Tên tài khoản không được để trống' : null),
+        textField(_fullNameController, "Họ và tên", validator: (value) => value!.isEmpty ? 'Họ và tên không được để trống' : null),
+        textField(_numberIDController, "Mã zip", validator: validateZipCode),
+        textField(_phoneNumberController, "Số điện thoại", validator: validatePhoneNumber),
+        textField(_birthDayController, "Ngày sinh (dd/mm/yyyy)", validator: (value) => value!.isEmpty ? 'Ngày sinh không được để trống' : null),
+        textField(_schoolYearController, "Email", validator: validateEmail),
+        textField(_schoolKeyController, "Địa chỉ", validator: (value) => value!.isEmpty ? 'Địa chỉ không được để trống' : null),
+        textField(
+          _passwordController,
+          "Mật khẩu",
+          obscureText: !_isPasswordVisible,
+          validator: validatePassword,
+          suffixIcon: IconButton(
+            icon: Icon(
+              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+            ),
+            onPressed: () {
+              setState(() {
+                _isPasswordVisible = !_isPasswordVisible;
+              });
+            },
+          ),
+        ),
+        textField(
+          _confirmPasswordController,
+          "Xác nhận mật khẩu",
+          obscureText: !_isConfirmPasswordVisible,
+          validator: (value) => value != _passwordController.text ? 'Xác nhận mật khẩu không khớp' : null,
+          suffixIcon: IconButton(
+            icon: Icon(
+              _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+            ),
+            onPressed: () {
+              setState(() {
+                _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+              });
+            },
+          ),
+        ),
+        const Text(
+          "Giới tính ?",
+          style: TextStyle(fontSize: 18),
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(0),
+                title: const Text("Nam"),
+                leading: Radio(
+                  value: 1,
+                  groupValue: _gender,
+                  onChanged: (value) {
+                    setState(() {
+                      _gender = value!;
+                    });
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(0),
+                title: const Text("Nữ"),
+                leading: Radio(
+                  value: 2,
+                  groupValue: _gender,
+                  onChanged: (value) {
+                    setState(() {
+                      _gender = value!;
+                    });
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(0),
+                title: const Text("Khác"),
+                leading: Radio(
+                  value: 3,
+                  groupValue: _gender,
+                  onChanged: (value) {
+                    setState(() {
+                      _gender = value!;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

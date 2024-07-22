@@ -1,4 +1,5 @@
 import 'package:app_bangiay_doan/data/data/api.dart';
+import 'package:app_bangiay_doan/page/login-register/youtube_tutorial_page.dart';
 import 'package:flutter/material.dart';
 import 'package:app_bangiay_doan/page/mainpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,12 +23,12 @@ class _LoginScreenState extends State<LoginScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Thông báo'),
-          content: Text('Vui lòng điền đầy đủ thông tin'),
+          title: const Text('Thông báo'),
+          content: const Text('Vui lòng điền đầy đủ thông tin'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         ),
@@ -42,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
         saveUser(user);
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Đăng nhập thành công'),
           ),
         );
@@ -55,12 +56,12 @@ class _LoginScreenState extends State<LoginScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Lỗi'),
-            content: Text('Đăng nhập thất bại. Vui lòng thử lại.'),
+            title: const Text('Lỗi'),
+            content: const Text('Đăng nhập thất bại. Vui lòng thử lại.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           ),
@@ -98,8 +99,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 200,
                 width: 200,
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Xin Chào !',
                 style: TextStyle(
                   fontSize: 24,
@@ -107,26 +108,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 8),
-              Text(
+              const SizedBox(height: 8),
+              const Text(
                 'Vui Lòng Đăng Nhập.',
                 style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               TextField(
                 controller: accountController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Tài khoản',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: passwordController,
                 obscureText: _obscureText,
                 decoration: InputDecoration(
                   labelText: 'Mật khẩu',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscureText ? Icons.visibility_off : Icons.visibility,
@@ -139,33 +140,43 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              Align(
+              const SizedBox(height: 10),
+              const Align(
                 alignment: Alignment.centerRight,
                 child: Text(
                   'Quên mật khẩu ?',
                   style: TextStyle(color: Colors.black),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: login,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  textStyle: TextStyle(fontSize: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  textStyle: const TextStyle(fontSize: 16),
                 ),
-                child: Text(
+                child: const Text(
                   'Đăng nhập',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/register');
                 },
-                child: Text('Người mới ? Tạo tài khoản'),
+                child: const Text('Người mới ? Tạo tài khoản'),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TutorialScreen()),
+                  );
+                },
+                child: const Text('Hướng dẫn sử dụng'),
               ),
             ],
           ),
