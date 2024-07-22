@@ -12,12 +12,22 @@ class _TutorialScreenState extends State<TutorialScreen> {
   late YoutubePlayerController _controller;
   bool _isPlayerReady = false;
   double _volume = 100;
+  Duration _videoPosition = Duration.zero;
+  Duration _videoDuration = Duration.zero;
+
+
+  final Map<String, String> _videoMap = {
+    'OrDB4jpA1g8': 'Hướng dẫn đăng nhập-đăng ký', 
+    '_VuJA-VQRcY': 'Hướng dẫn app',
+    'pDddlvCfTiw': 'Nhạc',
+  };
+  String _currentVideoId = 'OrDB4jpA1g8'; 
 
   @override
   void initState() {
     super.initState();
     _controller = YoutubePlayerController(
-      initialVideoId: 'OrDB4jpA1g8',
+      initialVideoId: _currentVideoId,
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
@@ -26,15 +36,31 @@ class _TutorialScreenState extends State<TutorialScreen> {
   }
 
   void _listener() {
-    if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {});
+    if (_isPlayerReady && mounted) {
+      setState(() {
+        _videoPosition = _controller.value.position;
+        _videoDuration = _controller.metadata.duration;
+      });
     }
+  }
+
+  void _changeVideo(String videoId) {
+    setState(() {
+      _currentVideoId = videoId;
+      _controller.load(_currentVideoId);
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes.toString().padLeft(2, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 
   @override
@@ -45,6 +71,21 @@ class _TutorialScreenState extends State<TutorialScreen> {
       ),
       body: Column(
         children: [
+          DropdownButton<String>(
+            value: _currentVideoId,
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                _changeVideo(newValue);
+              }
+            },
+            items: _videoMap.entries.map<DropdownMenuItem<String>>((entry) {
+              return DropdownMenuItem<String>(
+                value: entry.key,
+                child: Text(entry.value),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 10),
           YoutubePlayer(
             controller: _controller,
             showVideoProgressIndicator: true,
@@ -54,8 +95,37 @@ class _TutorialScreenState extends State<TutorialScreen> {
             ),
             onReady: () {
               _isPlayerReady = true;
+              setState(() {
+                _videoDuration = _controller.metadata.duration;
+              });
             },
           ),
+          const SizedBox(height: 10),
+          if (_videoDuration != Duration.zero)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(_formatDuration(_videoPosition)),
+                      Text(_formatDuration(_videoDuration)),
+                    ],
+                  ),
+                  Slider(
+                    value: _videoPosition.inSeconds.toDouble(),
+                    min: 0.0,
+                    max: _videoDuration.inSeconds.toDouble(),
+                    onChanged: (newValue) {
+                      _controller.seekTo(Duration(seconds: newValue.toInt()));
+                    },
+                    divisions: _videoDuration.inSeconds,
+                    label: '${_formatDuration(_videoPosition)} / ${_formatDuration(_videoDuration)}',
+                  ),
+                ],
+              ),
+            ),
           const SizedBox(height: 10),
           const Text(
             'Hướng dẫn sử dụng',
@@ -94,7 +164,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                 onPressed: () {
                   final currentPosition = _controller.value.position;
                   final newPosition = currentPosition + const Duration(seconds: 10);
-                  _controller.seekTo(newPosition < _controller.metadata.duration ? newPosition : _controller.metadata.duration);
+                  _controller.seekTo(newPosition < _videoDuration ? newPosition : _videoDuration);
                 },
               ),
               IconButton(
