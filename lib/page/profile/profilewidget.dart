@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:app_bangiay_doan/data/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'profileedit.dart';
 import 'settings.dart'; // Import the settings page
 
 class ProfileWidget extends StatefulWidget {
@@ -156,11 +155,22 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   const SizedBox(height: 40),
                   OutlinedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UpdateProfileScreen(),
-                        ),
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Thông báo'),
+                            content: const Text('Chức năng đang phát triển'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
                     child: const Text(

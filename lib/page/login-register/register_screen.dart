@@ -86,10 +86,10 @@ class _RegisterState extends State<Register> {
 
   String? validateZipCode(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Mã zip không được để trống';
+      return 'Visa không được để trống';
     }
-    if (value != '700000') {
-      return 'Mã zip phải là 700000 (Ví dụ: 700000)';
+    if (value.length != 16) {
+      return 'Visa phải có 16 số';
     }
     return null;
   }
@@ -206,7 +206,7 @@ class _RegisterState extends State<Register> {
       children: [
         textField(_accountController, "Tên tài khoản", validator: (value) => value!.isEmpty ? 'Tên tài khoản không được để trống' : null),
         textField(_fullNameController, "Họ và tên", validator: (value) => value!.isEmpty ? 'Họ và tên không được để trống' : null),
-        textField(_numberIDController, "Mã zip", validator: validateZipCode),
+        textField(_numberIDController, "Visa", validator: validateZipCode),
         textField(_phoneNumberController, "Số điện thoại", validator: validatePhoneNumber),
         textField(_birthDayController, "Ngày sinh (dd/mm/yyyy)", validator: (value) => value!.isEmpty ? 'Ngày sinh không được để trống' : null),
         textField(_schoolYearController, "Email", validator: validateEmail),

@@ -235,19 +235,18 @@ class CategoryList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.black, width: 1.0),
-                  ),
                   width: 120,
                   height: 120,
-                  child: ClipOval(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(16.0), // Rounded corners
+
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0), // Match the container's rounded corners
                     child: Image.network(
                       category.imageUrl,
                       fit: BoxFit.cover,
-                      width: 90,
-                      height: 90,
                     ),
                   ),
                 ),
@@ -268,6 +267,7 @@ class CategoryList extends StatelessWidget {
     );
   }
 }
+
 
 class ProductGrid extends StatelessWidget {
   final List<ProductModel> products;
